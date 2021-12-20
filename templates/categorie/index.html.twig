@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{# {% block title %}Hello CategorieController!{% endblock %}
+{% block grosTitre %}Je suis un h1{% endblock %} #}
+{% block body %}
+    <h1>Test</h1>
+    {# {% if (categories|length > 0) %}
+    <ul>
+        {% for categorie in categories %}
+            <li>{{categorie.name}}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+        <p>Il n'y a pas de catégories pour le moment</p>
+    {% endif %} #}
+
+{# 
+    {% %} Permet d'utiliser les fonctionnalités de twig
+    {{ }} Permet d'afficher une information sur la page
+ #}
+    <ul>
+    {% for categorie in categories %}
+        <li><a href={{ path('category_single', {id: categorie.id}) }}>{{categorie.name}}</a></li>
+    {% else %}
+        <li>Il n'y a pas de catégories pour le moment</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

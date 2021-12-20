@@ -5,3 +5,7 @@ controllers:
 kernel:
     resource: ../src/Kernel.php
     type: annotation
+
+hello: # Nom de la route
+    path: /hello # Path qu'on retrouve dans l'url
+    controller: App\Controller\TestController::index # Le nom du controller à charger avec la méthode utilisée
