@@ -9,6 +9,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
  */
+#[
+    ORM\HasLifecycleCallbacks()
+]
 class Post
 {
     /**
@@ -125,5 +128,17 @@ class Post
         $this->picture = $picture;
 
         return $this;
+    }
+
+    #[
+        ORM\PostRemove
+    ]
+    public function deletePicture()
+    {
+        if (file_exists(__DIR__.'/../../public/img/uploads/'. $this->picture)) {
+            unlink(__DIR__.'/../../public/img/uploads/'. $this->picture);
+        }
+
+        return true;
     }
 }
