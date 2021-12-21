@@ -22,7 +22,7 @@ class AppFixtures extends Fixture
                     Exercitationem voluptas, enim obcaecati magnam possimus debitis nostrum magni impedit similique molestias rerum, eum corporis provident delectus optio eligendi totam aliquam iste culpa? Incidunt quidem nisi dolorem soluta voluptatibus omnis?
                     At non cupiditate, dolorum veritatis quibusdam ullam nihil id quidem, nesciunt consequuntur rerum, iure molestiae eum sequi sit veniam maxime temporibus eos tempore. Molestiae repudiandae voluptate officiis, quam dolor unde.");
                     $post->setCreatedAt(new \DateTime());
-
+                    $post->setCategory($categorie);
                     $manager->persist($post);
                 }
             $manager->persist($categorie);

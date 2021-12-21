@@ -3,8 +3,20 @@
 {% block body %}
 
 <div class="container">
+
+    <div class="alert">
+        {% for type, messages in app.flashes %}
+            <div class="alert-{{type}}">
+                {% for message in messages %}
+                    <p>{{message}}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
     {{ form_start(form) }}
         <div class="form-floating mb-3">
+            {# form_widget  #}
             {{ form_widget(form.title, {attr: {class: "form-control", placeholder: "Titre"}})}}
             {{ form_label(form.title)}}
             {{ form_errors(form.title)}}
@@ -13,6 +25,11 @@
             {{ form_widget(form.content, {attr: {class: "form-control", placeholder: "Titre"}})}}
             {{ form_label(form.content)}}
             {{ form_errors(form.content)}}
+        </div>
+        <div class="">
+            {{ form_label(form.category)}}
+            {{ form_widget(form.category, {attr: {class: "form-control mb-3", placeholder: "Titre"}})}}
+            {{ form_errors(form.category)}}
         </div>
         <div>
             {{form_row(form.Ajouter)}}
