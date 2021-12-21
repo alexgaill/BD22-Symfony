@@ -33,6 +33,20 @@ class PostController extends AbstractController
 
         // Si les données sont ok
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $picture = $form->get('picture')->getData();
+            dump($picture);
+            $pictureName = md5(uniqid()).'.'. $picture->guessExtension();
+
+            $picture->move(
+                // $this->getParameter permet de récupérer la valeur d'un paramètre définit dans le fichier
+                // de config services.yaml
+                $this->getParameter('upload_file'),
+                $pictureName
+            );
+            $post->setPicture($pictureName);
+
+
             // On ajoute le createdAt à l'article
             $post->setCreatedAt(new \DateTime());
             // On le persist et l'enregistre en BDD
@@ -53,5 +67,15 @@ class PostController extends AbstractController
             'form' => $form->createView()
         ]);
 
+    }
+
+    #[
+        Route("/post/single/{id}", name: "post_single")
+    ]
+    public function single(Post $post)
+    {
+        return $this->render("post/single.html.twig", [
+            "post" => $post
+        ]);
     }
 }

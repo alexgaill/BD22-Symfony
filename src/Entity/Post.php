@@ -51,6 +51,17 @@ class Post
      */
     private $category;
 
+    /**
+     * @ORM\Column(type="string", length=40, nullable=true)
+     */
+    #[
+        Assert\File(
+            mimeTypes: ["image/png", "image/jpeg"],
+            mimeTypesMessage: "On attend un fichier JPG ou PNG"
+        )
+    ]
+    private $picture;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -100,6 +111,18 @@ class Post
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getPicture()
+    {
+        return $this->picture;
+    }
+
+    public function setPicture($picture): self
+    {
+        $this->picture = $picture;
 
         return $this;
     }
