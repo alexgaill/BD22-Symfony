@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PostRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
@@ -19,7 +20,19 @@ class Post
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank
      */
+    #[
+        Assert\NotBlank(
+            message: "Le {{label}} ne peut pas être vide merci de le remplir"
+        ),
+        Assert\Length(
+            min: 3,
+            max: 20,
+            minMessage: "Le titre doit contenir au minimum {{ limit }} caractères",
+            maxMessage: "Le titre doit contenir au maximum {{ limit }} caractères"
+        )
+    ]
     private $title;
 
     /**

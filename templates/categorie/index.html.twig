@@ -2,7 +2,21 @@
 
 {# {% block title %}Hello CategorieController!{% endblock %}
 {% block grosTitre %}Je suis un h1{% endblock %} #}
+
 {% block body %}
+
+    {# Nous permet de gérer et d'afficher les messages flash reçus par les controller #}
+    <div class="alert">
+        {% for type, messages in app.flashes %}
+            <div class="alert-{{type}}">
+                {% for message in messages %}
+                    <p>{{message}}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+
     <h1>Test</h1>
     {# {% if (categories|length > 0) %}
     <ul>

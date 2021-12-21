@@ -1,0 +1,22 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+<div class="container">
+    {{ form_start(form) }}
+        <div class="form-floating mb-3">
+            {{ form_widget(form.title, {attr: {class: "form-control", placeholder: "Titre"}})}}
+            {{ form_label(form.title)}}
+            {{ form_errors(form.title)}}
+        </div>
+        <div class="form-floating mb-3">
+            {{ form_widget(form.content, {attr: {class: "form-control", placeholder: "Titre"}})}}
+            {{ form_label(form.content)}}
+            {{ form_errors(form.content)}}
+        </div>
+        <div>
+            {{form_row(form.Ajouter)}}
+        </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}
