@@ -17,7 +17,7 @@
     </div>
 
 
-    <h1>Test</h1>
+    <h1>{{ "Bonjour"| trans }}</h1>
     {# {% if (categories|length > 0) %}
     <ul>
         {% for categorie in categories %}
@@ -32,9 +32,10 @@
     {% %} Permet d'utiliser les fonctionnalités de twig
     {{ }} Permet d'afficher une information sur la page
  #}
+    <p>{{ "accueil.paragraphe1" |trans }}</p>
     <ul>
     {% for categorie in categories %}
-        <li><a href={{ path('category_single', {id: categorie.id}) }}>{{categorie.name}}</a></li>
+        <li><a href={{ path('category_single', {id: categorie.id}) }}>{{ categorie.name |trans}}</a></li>
     {% else %}
         <li>Il n'y a pas de catégories pour le moment</li>
     {% endfor %}
