@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Category;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,7 +14,10 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 
-#[Route("/categorie", name: "category_")]
+#[
+    Route("/categorie", name: "category_"),
+    IsGranted("ROLE_USER")
+]
 class CategorieController extends AbstractController
 {
 
@@ -21,6 +26,11 @@ class CategorieController extends AbstractController
         $this->doctrine = $doctrine;
     }
 
+    /**
+     * @Security("is_granted(['ROLE_USER', 'ROLE_ADMIN'])")
+     *
+     * @return Response
+     */
     #[Route('/', name: 'list', methods: "GET")]
     public function index(): Response
     {
@@ -35,7 +45,10 @@ class CategorieController extends AbstractController
         ]);
     }
 
-    #[Route("/save", name: "save", methods: ["POST", "GET"])]
+    #[
+        Route("/save", name: "save", methods: ["POST", "GET"]),
+        IsGranted("ROLE_ADMIN")
+    ]
     public function save(Request $request): Response
     {
         // On créé un objet Category que l'on veut ajouter à la BDD
@@ -79,6 +92,7 @@ class CategorieController extends AbstractController
     #[Route("/update/{id}", name: "update", methods: ["POST", "GET"])]
     public function update(Category $category, Request $request): Response
     {
+        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
         $form = $this->createFormBuilder($category)
             ->add('name', TextType::class, [
             "label" => "Nom de la catégorie" 
@@ -108,9 +122,11 @@ class CategorieController extends AbstractController
     #[Route("/delete/{id}", name: "delete")]
     public function delete(Category $category): Response
     {
-        $em = $this->doctrine->getManager();
-        $em->remove($category);
-        $em->flush();
+        if ($this->isGranted("ROLE_SUPER_ADMIN")) {
+            $em = $this->doctrine->getManager();
+            $em->remove($category);
+            $em->flush();
+        }
         return $this->redirectToRoute("category_list");
     }
 }
