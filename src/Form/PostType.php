@@ -37,7 +37,7 @@ class PostType extends AbstractType
                 // ici name pour le name des catégories
                 "choice_label" => "name"
             ])
-            ->add('picture', FileType::class, ["label" => "Image (JPEG/PNG)"])
+            ->add('picture', FileType::class, ["label" => "Image (JPEG/PNG)", "required" => false])
             ->add("Ajouter", SubmitType::class)
 
             ->add("select", ChoiceType::class, [

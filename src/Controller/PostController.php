@@ -4,11 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Post;
 use App\Form\PostType;
+use App\Repository\PostRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\HttpFoundation\File\File;
 
 class PostController extends AbstractController
 {
@@ -35,7 +39,6 @@ class PostController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $picture = $form->get('picture')->getData();
-            dump($picture);
             $pictureName = md5(uniqid()).'.'. $picture->guessExtension();
 
             $picture->move(
@@ -76,6 +79,66 @@ class PostController extends AbstractController
     {
         return $this->render("post/single.html.twig", [
             "post" => $post
+        ]);
+    }
+
+    #[Route("/post/update/{id}", name: "post_update")]
+    public function update(Post $post, Request $request, EntityManagerInterface $em): Response
+    {
+        // On récupère le nom de l'ancienne image
+        // $oldPicture = $post->getPicture();
+
+        // On génère un nouveau post auquel on passe le nom de l'ancienne image
+        $oldPost = new Post();
+        $oldPost->setPicture($post->getPicture());
+        
+        // Si l'image n'est pas null en BDD, on génère un fichier à partir de l'image pour pouvoir
+        // faire fonctionner le formulaire car l'input file attend un fichier et nom le nom d'un fichier
+        if($post->getPicture() !== null){
+            $picture = new File($this->getParameter("upload_file") ."/". $post->getPicture());
+            $post->setPicture($picture);
+        }
+
+        $form = $this->createForm(PostType::class, $post)
+                // On ajoute un champs hiden avec l'ancien nom de l'image
+                // ->add("oldPicture", HiddenType::class, [
+                //     'data' => $oldPicture,
+                //     'mapped' => false
+                // ])
+                ;
+        $form->handleRequest($request);
+        
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            // On récupère le nom de l'ancienne image sur l'input hiddent
+            // $oldPicture = $form->get("oldPicture")->getData();
+
+            // Si on soumet une nouvelle image
+            if ($form->get("picture")->getData() !== null ) {
+                // On supprime l'ancienne pour ne pas garder d'images inutiles
+                unlink($this->getParameter("upload_file") . "/" . $oldPost->getPicture());
+                // On déplace l'image, on génère un nom unique qu'on ajoute en BDD
+                $picture = $form->get('picture')->getData();
+                $pictureName = md5(uniqid()).'.'. $picture->guessExtension();
+                $picture->move(
+                    $this->getParameter('upload_file'),
+                    $pictureName
+                );
+                $post->setPicture($pictureName);
+            } else {
+                // Si on ne soumet pas de nouvelle image,
+                // On réenregistre le nom de l'ancienne image en BDD
+                $post->setPicture($oldPost->getPicture());
+                // $post->setPicture($oldPicture);
+            }
+            
+            $em->persist($post);
+            $em->flush();
+            return $this->redirectToRoute("category_list");
+        }
+
+        return $this->render("post/update.html.twig", [
+            "form" => $form->createView()
         ]);
     }
 }

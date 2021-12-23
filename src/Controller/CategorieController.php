@@ -27,7 +27,6 @@ class CategorieController extends AbstractController
     }
 
     /**
-     * @Security("is_granted(['ROLE_USER', 'ROLE_ADMIN'])")
      *
      * @return Response
      */
