@@ -17,10 +17,11 @@ use Symfony\Component\HttpFoundation\File\File;
 class PostController extends AbstractController
 {
     #[Route('/post', name: 'post')]
-    public function index(): Response
+    public function index(PostRepository $repo): Response
     {
+        dump($repo->findByKeyword("Article%"));
         return $this->render('post/index.html.twig', [
-            'controller_name' => 'PostController',
+            'posts' => $repo->findByKeyword("Article%")
         ]);
     }
 
