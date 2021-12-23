@@ -84,10 +84,12 @@ class SecurityController extends AbstractController
             // On vérifie que les 2 password sont identiques
             if ($form->get("passwordOne")->getData() === $form->get("passwordBis")->getData()) {
                 // On encode le password
-                $userPasswordHasher->hashPassword(
+                $encodedPassword = $userPasswordHasher->hashPassword(
                     $user,
                     $form->get('passwordOne')->getData()
                 );
+
+                $user->setPassword($encodedPassword);
 
                 // On update le user
                 $em->persist($user);
