@@ -1,3 +1,5 @@
 accueil :
   paragraphe1 : Lorem ipsum dolor sit amet
 Categorie: Catégorie
+forget:
+  password: Renseignez votre email et vous recevrez un mail pour réinitialiser votre mot de passe

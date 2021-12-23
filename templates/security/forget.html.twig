@@ -1,0 +1,10 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <div class="container">
+        <p>{{'forget.password'|trans}}</p>
+        <div class="my-3">
+            {{form(form)}}
+        </div>
+    </div>
+{% endblock %}
